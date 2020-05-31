@@ -1,0 +1,150 @@
+<h4>EEPROM Editor for Malyan and Monoprice STM32F401 Based 3D Printers</h4>
+This plugin is designed to get, change and save the values in the EEPROM of your Malyan or Monoprice STM32F401 Based 3D Printer. If any changes are made that cause your printer to malfunction, you may <a href="https://mpselectmini.com/howto/default_settings">restore factory settings</a>.<br>
+<span style="color:red;"><small><b><i>If all or some of the form fields below are duplicated multiple times, close and reopen the plugin. If that doesn't work then try <span style="border: 1px solid black"> CTRL+F5 </span> or <span style="border: 1px solid black"> CMD+F5 </span>.</i></b></small></span><br><br>
+<span style="color: red" data-bind="visible: isConnected() && !isMalyanFirmware()">Sorry. This plugin does not work with your machine.</span>
+<span style="color: red" data-bind="visible: !isConnected()">Printer not connected.</span>
+
+<div data-bind="visible: isConnected() && isMalyanFirmware()">
+<b>Firmware:</b> <span data-bind="text: firmware_name()"></span><br>
+<span style="color: red" data-bind="visible: !isTestedVersion()"><small>This plugin has <b>NOT</b> been thoroughly tested with the 'GigDigit Mainboard - Select Mini V1 & V2 - "New Quiet" Version', Malyan M320, Malyan MA10, Malyan MA10 Mini, Monoprice MP10, or Monoprice MP10 Mini running any version firmware.<br> There are some missing fields such as <span style="border: 1px solid black">M851</span>, <span style="border: 1px solid black">M907</span>, and probably some others but they will be added soon. Use this plugin at your own risk.</small></span><br>
+<form class="form-horizontal">
+    <button data-bind="enabled: isMalyanFirmware, click: loadEeprom" class="btn icon-download-alt" aria-hidden="true">&nbsp;{{ _('Load EEPROM') }}</button>
+    <button data-bind="enabled: isMalyanFirmware, click: saveEeprom" class="btn icon-upload-alt" aria-hidden="true">&nbsp;{{ _('Upload EEPROM') }}</button>
+</form>
+<h4 data-bind="visible: eepromDataStepsCount()">&nbsp;</h4>
+<h4 data-bind="visible: eepromDataStepsCount()">Steps per mm</h4>
+<div class="row-fluid" data-bind="foreach: eepromDataSteps">
+    <div class="span3">
+        <label class="control-label" data-bind="text: label"></label>
+        <div class="controls">
+            <div class="input-append">
+                <input type="number" class="input-small text-right" data-bind="value: value">
+                <span class="add-on" data-bind="text: unit"></span>
+            </div>
+            <span class="help-block" data-bind="text: description"></span>
+        </div>
+    </div>
+</div>
+<h4 data-bind="visible: eepromDataFRatesCount()">&nbsp;</h4>
+<h4 data-bind="visible: eepromDataFRatesCount()">Maximum feedrates</h4>
+<div class="row-fluid" data-bind="foreach: eepromDataFRates">
+    <div class="span3">
+        <label class="control-label" data-bind="text: label"></label>
+        <div class="controls">
+            <div class="input-append">
+                <input type="number" class="input-small text-right" data-bind="value: value">
+                <span class="add-on" data-bind="text: unit"></span>
+            </div>
+            <span class="help-block" data-bind="text: description"></span>
+        </div>
+    </div>
+</div>
+<h4 data-bind="visible: eepromDataMaxAccelCount()">&nbsp;</h4>
+<h4 data-bind="visible: eepromDataMaxAccelCount()">Maximum Acceleration</h4>
+<div class="row-fluid" data-bind="foreach: eepromDataMaxAccel">
+    <div class="span3">
+        <label class="control-label" data-bind="text: label"></label>
+        <div class="controls">
+            <div class="input-append">
+                <input type="number" class="input-small text-right" data-bind="value: value">
+                <span class="add-on" data-bind="text: unit"></span>
+            </div>
+            <span class="help-block" data-bind="text: description"></span>
+        </div>
+    </div>
+</div>
+<h4 data-bind="visible: eepromDataAccelCount()">&nbsp;</h4>
+<h4 data-bind="visible: eepromDataAccelCount()">Acceleration</h4>
+<div class="row-fluid" data-bind="foreach: eepromDataAccel">
+    <div class="span4">
+        <label class="control-label" data-bind="text: label"></label>
+        <div class="controls">
+            <div class="input-append">
+                <input type="number" class="input-small text-right" data-bind="value: value">
+                <span class="add-on" data-bind="text: unit"></span>
+            </div>
+            <span class="help-block" data-bind="text: description"></span>
+        </div>
+    </div>
+</div>
+<h4 data-bind="visible: eepromDataHomingCount()">&nbsp;</h4>
+<h4 data-bind="visible: eepromDataHomingCount()">Home offset</h4>
+<div class="row=fluid" data-bind="foreach: eepromDataHoming">
+    <div class="span4">
+        <label class="control-label" data-bind="text: label"></label>
+        <div class="controls">
+            <div class="input-append">
+                <input type="number" class="input-mini text-right" data-bind="value: value">
+                <span class="add-on" data-bind="text: unit"></span>
+            </div>
+            <span class="help-block" data-bind="text: description"></span>
+        </div>
+    </div>
+</div>
+<h4 data-bind="visible: eepromDataPIDCount()">&nbsp;</h4>
+<h4 data-bind="visible: eepromDataPIDCount()">PID Settings</h4>
+<div class="row-fluid" data-bind="foreach: eepromDataPID">
+    <div class="span3">
+        <label class="control-label" data-bind="text: label"></label>
+        <div class="controls">
+            <div class="input-append">
+                <input type="number" class="input-mini text-right" data-bind="value: value">
+                <span class="add-on" data-bind="text: unit"></span>
+            </div>
+            <span class="help-block" data-bind="text: description"></span>
+        </div>
+    </div>
+</div>
+<div class="row-fluid" data-bind="foreach: eepromDataPIDB">
+    <div class="span3">
+        <label class="control-label" data-bind="text: label"></label>
+        <div class="controls">
+            <div class="input-append">
+                <input type="number" class="input-mini text-right" data-bind="value: value">
+                <span class="add-on" data-bind="text: unit"></span>
+            </div>
+            <span class="help-block" data-bind="text: description"></span>
+        </div>
+    </div>
+</div>
+<h4 data-bind="visible: eepromDataFilamentCount()">&nbsp;</h4>
+<h4 data-bind="visible: eepromDataFilamentCount()">Filament settings</h4>
+<div class="row-fluid" data-bind="foreach: eepromDataFilament">
+    <div class="span12">
+        <label class="control-label" data-bind="text: label"></label>
+        <div class="controls">
+            <div class="input-append">
+                <input type="number" class="input-mini text-right" data-bind="value: value">
+                <span class="add-on" data-bind="text: unit"></span>
+            </div>
+            <span class="help-block" data-bind="text: description"></span>
+        </div>
+    </div>
+</div>
+<h4 data-bind="visible: eepromDataCount()">&nbsp;</h4>
+<h4 data-bind="visible: eepromDataCount()">Advanced</h4>
+<div class="row-fluid" data-bind="foreach: eepromData1">
+    <div class="span3">
+        <label class="control-label" data-bind="text: label"></label>
+        <div class="controls">
+            <div class="input-append">
+                <input type="number" class="input-mini text-right" data-bind="value: value">
+                <span class="add-on" data-bind="text: unit"></span>
+            </div>
+            <span class="help-block" data-bind="text: description"></span>
+        </div>
+    </div>
+</div>
+<div class="row-fluid" data-bind="foreach: eepromData2">
+    <div class="span3">
+        <label class="control-label" data-bind="text: label"></label>
+        <div class="controls">
+            <div class="input-append">
+                <input type="number" class="input-mini text-right" data-bind="value: value">
+                <span class="add-on" data-bind="text: unit"></span>
+            </div>
+            <span class="help-block" data-bind="text: description"></span>
+        </div>
+    </div>
+</div>
+</div>
